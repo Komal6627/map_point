@@ -1,5 +1,4 @@
 
-
 export class Mapdatum {
   id: number;
 
