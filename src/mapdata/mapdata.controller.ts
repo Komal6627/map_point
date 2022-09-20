@@ -58,7 +58,7 @@ export class MapdataController {
 
   @Post('data')
   @UseInterceptors(
-    FileInterceptor('file_asset', {
+    FileInterceptor('file', {
       storage: diskStorage({
         destination: 'filedata',
       }),
@@ -67,13 +67,36 @@ export class MapdataController {
   async uploadFile() {
     const csvFile = readFileSync('filedata/1.csv');
     const csvData = csvFile.toString();
+
     const parsedCsv = await parse(csvData, {
       header: true,
       skipEmptyLines: true,
       transformHeader: (header) => header.toLowerCase().replace('#', '').trim(),
       complete: (results) => results.data,
     });
-    console.log(parsedCsv);
+    //console.log(parsedCsv);
+
+    let newLocation = {
+      type: 'Point',
+      coordinates: [
+        parsedCsv.data[0]['longitude'],
+        parsedCsv.data[0]['latitude'],
+      ],
+    };
+
+    let newData = {
+      id: parsedCsv.data[0]['id'],
+      longitude: parsedCsv.data[0]['longitude'],
+      latitude: parsedCsv.data[0]['latitude'],
+      cityname: parsedCsv.data[0]['cityname'],
+      // alt:parsedCsv.data[0]['alt'],
+      // location:"ST_MakePoint(" + parsedCsv.data[0]['log'] + ", " + parsedCsv.data[0]['lat']+","+parsedCsv.data[0]['alt']+")",
+      location: newLocation,
+    };
+    //  console.log(parsedCsv)
+    console.log(newData, 'boooooooooom');
+    return this.mapdataService.create(newData)
+    // };
   }
 
   @Get()
