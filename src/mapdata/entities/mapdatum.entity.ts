@@ -13,7 +13,7 @@ export class Mapdatum {
   longitude: string;
 
   @Column()
-  city_name: string;
+  cityname: string;
 
   @Index({ spatial: true })
   @Column({
@@ -23,5 +23,4 @@ export class Mapdatum {
     nullable: true,
   })
   location: Point;
-
 }
